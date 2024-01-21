@@ -2,7 +2,9 @@ import IECore
 import Gaffer
 import GafferScene
 import GafferUI
+import imath
 import logging
+import subprocess
 import os
 
 logger = logging.getLogger(__name__)
@@ -19,12 +21,16 @@ def registerAnnotation( menu):
         current_annotation = Gaffer.Metadata.value(selected[0], "annotation:greeting:text")
         initial_text = current_annotation if current_annotation else ""
         d = GafferUI.TextInputDialogue( initialText=initial_text, title="Annotation", confirmLabel="Set" )
+        c = GafferUI.ColorChooserDialogue( title="Select Color", color=imath.Color3f( 1 ) , cancelLabel="Cancel", confirmLabel="OK" )
         text = d.waitForText( parentWindow =  mainWindow )
+        color = c.waitForColor( parentWindow =  mainWindow )
         for node in selected:
             if text:
                 Gaffer.Metadata.registerValue(node, "annotation:greeting:text", text)
+                Gaffer.Metadata.registerValue( node, 'annotation:greeting:color', imath.Color3f(color) )
             else:
                 Gaffer.Metadata.deregisterValue(node, "annotation:greeting:text")
+                Gaffer.Metadata.registerValue( node, 'annotation:greeting:color', imath.Color3f(color) )
 
 def registerEditScopeIncludeInNavigationMenu( menu):
     scriptWindow = menu.ancestor( GafferUI.ScriptWindow )
@@ -42,7 +48,12 @@ def registerEditScopeIncludeInNavigationMenu( menu):
             else:
                 Gaffer.Metadata.deregisterValue(node, "editScope:includeInNavigationMenu")
 
-
+def openThisFile_GRF( menu ):
+    scriptWindow = menu.ancestor( GafferUI.ScriptWindow )
+    script = scriptWindow.scriptNode()
+    FileName = script["fileName"].getValue()
+    FileName = os.path.dirname(FileName)
+    subprocess.run(['xdg-open', FileName])
 
 
 def export_extension( menu ) :

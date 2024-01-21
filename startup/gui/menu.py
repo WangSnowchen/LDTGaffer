@@ -21,7 +21,13 @@ GafferUI.ScriptWindow.menuDefinition(application).append(
 		"label" : "registerAnnotation"
 	}
 )
-
+GafferUI.ScriptWindow.menuDefinition(application).append(
+	"/LDT/tools/" + "OpenthisFile",
+	{
+		"command" : functools.partial( LDTGafferUtils.openEditScope), #open this GRF file
+		"label" : "OpenthisFile"
+	}
+)
 GafferUI.ScriptWindow.menuDefinition(application).append(
 	"/LDT/tools/" + "registerEditScopeIncludeInNavigationMenu",
 	{
