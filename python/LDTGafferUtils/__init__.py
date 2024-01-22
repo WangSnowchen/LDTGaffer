@@ -18,7 +18,7 @@ def registerAnnotation( menu):
 
     selected = script.selection()
     if selected.size():
-        current_annotation = Gaffer.Metadata.value(selected[0], "annotation:greeting:text")
+        current_annotation = Gaffer.Metadata.value(selected[0], "annotation:user:text")
         initial_text = current_annotation if current_annotation else ""
         d = GafferUI.TextInputDialogue( initialText=initial_text, title="Annotation", confirmLabel="Set" )
         c = GafferUI.ColorChooserDialogue( title="Select Color", color=imath.Color3f( 1 ) , cancelLabel="Cancel", confirmLabel="OK" )
@@ -26,11 +26,11 @@ def registerAnnotation( menu):
         color = c.waitForColor( parentWindow =  mainWindow )
         for node in selected:
             if text:
-                Gaffer.Metadata.registerValue(node, "annotation:greeting:text", text)
-                Gaffer.Metadata.registerValue( node, 'annotation:greeting:color', imath.Color3f(color) )
+                Gaffer.Metadata.registerValue(node, "annotation:user:text", text)
+                Gaffer.Metadata.registerValue( node, 'annotation:user:color', imath.Color3f(color) )
             else:
-                Gaffer.Metadata.deregisterValue(node, "annotation:greeting:text")
-                Gaffer.Metadata.registerValue( node, 'annotation:greeting:color', imath.Color3f(color) )
+                Gaffer.Metadata.deregisterValue(node, "annotation:user:text")
+                Gaffer.Metadata.registerValue( node, 'annotation:user:color', imath.Color3f(color) )
 
 def registerEditScopeIncludeInNavigationMenu( menu):
     scriptWindow = menu.ancestor( GafferUI.ScriptWindow )
